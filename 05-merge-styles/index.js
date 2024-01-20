@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const pathStylesBundle = path.resolve(__dirname, 'project-dist', 'style.css');
+const pathStylesBundle = path.resolve(__dirname, 'project-dist', 'bundle.css');
 const pathStylesFolder = path.resolve(__dirname, 'styles');
 
 fs.readdir(pathStylesFolder, { withFileTypes: true }, (err, files) => {
