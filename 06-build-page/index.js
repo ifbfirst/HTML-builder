@@ -1,9 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-//const pathStyle = path.resolve(__dirname, 'project-dist');
-//const pathStylesFolder = path.resolve(__dirname, 'styles');
-
 //create folder project-dis
 
 function createProjectFolder() {
@@ -74,5 +71,34 @@ function copyDir() {
     },
   );
 }
-copyDir();
+
+//create style.css
+function addStyle() {
+  const pathStylesDest = path.resolve(__dirname, 'project-dist', 'style.css');
+  const pathStylesSource = path.resolve(__dirname, 'styles');
+
+  fs.readdir(pathStylesSource, { withFileTypes: true }, (err, files) => {
+    let streamWrite = '';
+    let streamRead = '';
+    if (err) {
+      console.log('Error!' + err);
+    } else {
+      files.forEach((file) => {
+        let filePath = path.resolve(pathStylesSource, file.name);
+        let fileExtname = path.extname(filePath);
+        if (fileExtname === '.css') {
+          streamRead = fs.createReadStream(filePath, 'utf-8');
+          streamWrite = fs.createWriteStream(pathStylesDest, 'utf-8');
+
+          streamRead.on('data', function (data) {
+            streamWrite.write(data);
+          });
+        }
+      });
+    }
+  });
+}
+
 createProjectFolder();
+copyDir();
+addStyle();
