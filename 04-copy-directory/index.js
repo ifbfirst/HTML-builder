@@ -15,7 +15,8 @@ function copyDir() {
       files.forEach((file) => {
         let filePath = path.resolve(pathFolder, file.name);
         let fileCopyPath = path.resolve(pathFolderCopy, file.name);
-
+console.log(filePath)
+console.log(fileCopyPath)
         fs.copyFile(filePath, fileCopyPath, () => {});
       });
     }
