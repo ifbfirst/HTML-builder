@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-//create folder project-dis
+//create folder project-dist
 
 function createProjectFolder() {
   const pathProjectFolder = path.join(__dirname, 'project-dist');
@@ -73,6 +73,7 @@ function copyDir() {
 }
 
 //create style.css
+
 function addStyle() {
   const pathStylesDest = path.resolve(__dirname, 'project-dist', 'style.css');
   const pathStylesSource = path.resolve(__dirname, 'styles');
@@ -99,6 +100,45 @@ function addStyle() {
   });
 }
 
+// add index.html
+
+function addIndex() {
+  const pathIndexDest = path.resolve(__dirname, 'project-dist', 'index.html');
+  const pathComponentsSource = path.resolve(__dirname, 'components');
+  const pathTemplatesSource = path.resolve(__dirname, 'template.html');
+  let streamReadTemplate = '';
+  let streamReadComp = '';
+  streamReadTemplate = fs.createReadStream(pathTemplatesSource, 'utf-8');
+
+  streamReadTemplate.on('data', function (data) {
+    fs.readdir(pathComponentsSource, { withFileTypes: true }, (err, files) => {
+      if (err) {
+        console.log('Error!' + err);
+      } else {
+        files.forEach((file) => {
+          let fileName = file.name;
+          let filePath = path.resolve(pathComponentsSource, file.name);
+          let fileExtname = path.extname(filePath);
+          if (fileExtname === '.html') {
+            streamReadComp = fs.createReadStream(filePath, 'utf-8');
+
+            streamReadComp.on('data', function (component) {
+              data = data.replaceAll(
+                `{{${fileName.slice(0, fileName.length - 5)}}}`,
+                component,
+              );
+              fs.writeFile(pathIndexDest, data, 'utf8', (err) => {
+                if (err) throw err;
+              });
+            });
+          }
+        });
+      }
+    });
+  });
+}
+
 createProjectFolder();
 copyDir();
 addStyle();
+addIndex();
