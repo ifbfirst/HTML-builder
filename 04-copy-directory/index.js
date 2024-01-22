@@ -8,6 +8,17 @@ function copyDir() {
     if (err) throw err;
   });
 
+  fs.readdir(pathFolderCopy, { withFileTypes: true }, (err, files) => {
+    if (err) {
+      console.log('Error!' + err);
+    } else {
+      files.forEach((file) => {
+        let filePath = path.resolve(pathFolderCopy, file.name);
+        fs.unlink(filePath, () => {});
+      });
+    }
+  });
+
   fs.readdir(pathFolder, { withFileTypes: true }, (err, files) => {
     if (err) {
       console.log('Error!' + err);
@@ -15,8 +26,6 @@ function copyDir() {
       files.forEach((file) => {
         let filePath = path.resolve(pathFolder, file.name);
         let fileCopyPath = path.resolve(pathFolderCopy, file.name);
-console.log(filePath)
-console.log(fileCopyPath)
         fs.copyFile(filePath, fileCopyPath, () => {});
       });
     }
