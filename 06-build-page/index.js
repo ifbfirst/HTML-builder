@@ -43,21 +43,6 @@ function copyDir() {
             if (err) throw err;
 
             fs.readdir(
-              assestsDestSubDirectoryPath,
-              { withFileTypes: true },
-              (err, files) => {
-                if (err) {
-                  console.log('Error!' + err);
-                } else {
-                  files.forEach((file) => {
-                    let filePath = path.resolve(pathFolderCopy, file.name);
-                    fs.unlink(filePath, () => {});
-                  });
-                }
-              },
-            );
-
-            fs.readdir(
               assestsSourceSubDirectoryPath,
               { withFileTypes: true },
               (err, files) => {
